@@ -29,6 +29,9 @@ const AnnouncementPage = () => {
     try {
       const response = await fetch('https://api.sheetbest.com/sheets/0a5e867e-2e01-4211-a422-066db24730ad');
       const data = await response.json();
+      
+      console.log('Fetched data:', data);
+      
       setAnnouncements(data);
       setFilteredAnnouncements(data);
       setLoading(false);
@@ -39,13 +42,45 @@ const AnnouncementPage = () => {
     }
   };
 
+  const getImageUrl = (imageUrl) => {
+    if (!imageUrl) {
+      return 'https://via.placeholder.com/300x200/4A90E2/FFFFFF?text=No+Image';
+    }
+
+    if (imageUrl.includes('drive.google.com')) {
+      let fileId = '';
+      
+   {/*diff url formats*/}
+      if (imageUrl.includes('/open?id=')) {
+        fileId = imageUrl.split('/open?id=')[1];
+      } else if (imageUrl.includes('/file/d/')) {
+        const match = imageUrl.match(/\/file\/d\/([a-zA-Z0-9-_]+)/);
+        if (match) fileId = match[1];
+      } else if (imageUrl.includes('id=')) {
+        fileId = imageUrl.split('id=')[1].split('&')[0];
+      }
+      
+      if (fileId) {
+        return `https://drive.google.com/uc?export=view&id=${fileId}`;
+      }
+    }
+
+    if (imageUrl.startsWith('http')) {
+      return imageUrl;
+    }
+
+    return 'https://via.placeholder.com/300x200/4A90E2/FFFFFF?text=No+Image';
+  };
+
   const handleSearch = (text) => {
     setSearchText(text);
     if (text === '') {
       setFilteredAnnouncements(announcements);
     } else {
       const filtered = announcements.filter(item =>
-        item.title?.toLowerCase().includes(text.toLowerCase())
+        item.title?.toLowerCase().includes(text.toLowerCase()) ||
+        item.description?.toLowerCase().includes(text.toLowerCase()) ||
+        item.category?.toLowerCase().includes(text.toLowerCase())
       );
       setFilteredAnnouncements(filtered);
     }
@@ -61,26 +96,40 @@ const AnnouncementPage = () => {
 
   const renderAnnouncementItem = ({ item, index }) => {
     const isEven = index % 2 === 0;
+    const imageUrl = getImageUrl(item.image);
+    
+    console.log('Rendering item:', item);
+    console.log('Image URL:', imageUrl);
+    
     return (
-      <View
+      <TouchableOpacity 
         style={[
           styles.announcementCard,
           isEven ? styles.evenCard : styles.oddCard
         ]}
+        activeOpacity={0.8}
       >
         <View style={styles.cardContent}>
           <Image
-            source={{ uri: item.image || 'https://via.placeholder.com/300x200' }}
+            source={{ uri: imageUrl }}
             style={styles.cardImage}
             resizeMode="cover"
+            onLoad={() => console.log('Image loaded successfully:', imageUrl)}
+            onError={(error) => {
+              console.log('Image loading error:', error);
+              console.log('Failed URL:', imageUrl);
+            }}
           />
           <View style={styles.cardOverlay}>
             <Text style={styles.cardTitle}>
               {item.title || 'Event Title'}
             </Text>
           </View>
+          <View style={styles.cardArrow}>
+            <Ionicons name="chevron-forward" size={30} color="#fff" />
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -98,8 +147,8 @@ const AnnouncementPage = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-
-      {/*headeryup*/}
+      
+      {/* header */}
       <View style={styles.header}>
         <View style={styles.headerContent}>
           <Text style={styles.headerTitle}>announcer</Text>
@@ -111,7 +160,7 @@ const AnnouncementPage = () => {
         </TouchableOpacity>
       </View>
 
-      {/*searchbaryup */}
+      {/*searchabr */}
       <View style={styles.searchContainer}>
         <View style={styles.searchBar}>
           <TextInput
@@ -127,7 +176,6 @@ const AnnouncementPage = () => {
         </View>
       </View>
 
-      {/* List */}
       <FlatList
         data={filteredAnnouncements}
         keyExtractor={(item, index) => index.toString()}
@@ -137,6 +185,8 @@ const AnnouncementPage = () => {
         onRefresh={fetchAnnouncements}
         refreshing={loading}
       />
+
+
     </SafeAreaView>
   );
 };
@@ -253,6 +303,24 @@ const styles = StyleSheet.create({
     color: '#fff',
     marginBottom: 8,
   },
+  cardSubtitle: {
+    fontSize: 16,
+    color: '#fff',
+    opacity: 0.9,
+    marginBottom: 4,
+  },
+  cardDescription: {
+    fontSize: 14,
+    color: '#fff',
+    opacity: 0.8,
+  },
+  cardArrow: {
+    position: 'absolute',
+    right: 20,
+    top: '50%',
+    transform: [{ translateY: -15 }],
+  },
+
 });
 
 export default AnnouncementPage;
