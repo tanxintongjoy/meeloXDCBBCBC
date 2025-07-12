@@ -44,7 +44,7 @@ const AnnouncementPage = () => {
 
   const getImageUrl = (imageUrl) => {
     if (!imageUrl) {
-      return 'https://via.placeholder.com/300x200/4A90E2/FFFFFF?text=No+Image';
+      return 'https://via.placeholder.com/300x200/4A90E2/FFFFFF?text=No+Image'; {/*place holder for now*/}
     }
 
     if (imageUrl.includes('drive.google.com')) {
