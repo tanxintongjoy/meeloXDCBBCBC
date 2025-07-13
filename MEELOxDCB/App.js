@@ -13,13 +13,15 @@ import {
   StatusBar
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
+import SettingsScreen from './settings.js';
 
-const AnnouncementPage = () => {
+const Tab = createBottomTabNavigator();
+
+const useAnnouncementData = () => {
   const [announcements, setAnnouncements] = useState([]);
-  const [filteredAnnouncements, setFilteredAnnouncements] = useState([]);
-  const [searchText, setSearchText] = useState('');
   const [loading, setLoading] = useState(true);
-  const [showSearch, setShowSearch] = useState(false);
 
   useEffect(() => {
     fetchAnnouncements();
@@ -33,7 +35,6 @@ const AnnouncementPage = () => {
       console.log('Fetched data:', data);
       
       setAnnouncements(data);
-      setFilteredAnnouncements(data);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching announcements:', error);
@@ -42,35 +43,144 @@ const AnnouncementPage = () => {
     }
   };
 
-  const getImageUrl = (imageUrl) => {
-    if (!imageUrl) {
-      return 'https://via.placeholder.com/300x200/4A90E2/FFFFFF?text=No+Image'; {/*place holder for now*/}
-    }
+  return { announcements, loading, fetchAnnouncements };
+};
 
-    if (imageUrl.includes('drive.google.com')) {
-      let fileId = '';
-      
-   {/*diff url formats*/}
-      if (imageUrl.includes('/open?id=')) {
-        fileId = imageUrl.split('/open?id=')[1];
-      } else if (imageUrl.includes('/file/d/')) {
-        const match = imageUrl.match(/\/file\/d\/([a-zA-Z0-9-_]+)/);
-        if (match) fileId = match[1];
-      } else if (imageUrl.includes('id=')) {
-        fileId = imageUrl.split('id=')[1].split('&')[0];
-      }
-      
-      if (fileId) {
-        return `https://drive.google.com/uc?export=view&id=${fileId}`;
-      }
-    }
-
-    if (imageUrl.startsWith('http')) {
-      return imageUrl;
-    }
-
+const getImageUrl = (imageUrl) => {
+  if (!imageUrl) {
     return 'https://via.placeholder.com/300x200/4A90E2/FFFFFF?text=No+Image';
-  };
+  }
+
+  if (imageUrl.includes('drive.google.com')) {
+    let fileId = '';
+    
+    if (imageUrl.includes('/open?id=')) {
+      fileId = imageUrl.split('/open?id=')[1];
+    } else if (imageUrl.includes('/file/d/')) {
+      const match = imageUrl.match(/\/file\/d\/([a-zA-Z0-9-_]+)/);
+      if (match) fileId = match[1];
+    } else if (imageUrl.includes('id=')) {
+      fileId = imageUrl.split('id=')[1].split('&')[0];
+    }
+    
+    if (fileId) {
+      return `https://drive.google.com/uc?export=view&id=${fileId}`;
+    }
+  }
+
+  if (imageUrl.startsWith('http')) {
+    return imageUrl;
+  }
+
+  return 'https://via.placeholder.com/300x200/4A90E2/FFFFFF?text=No+Image';
+};
+
+// header
+const Header = () => (
+  <View style={styles.header}>
+    <View style={styles.headerContent}>
+      <Text style={styles.headerTitle}>announcer</Text>
+      <Text style={styles.headerSubtitle}>DCB events/campaigns</Text>
+    </View>
+    <TouchableOpacity style={styles.themeButton}>
+      <Text style={styles.themeText}>theme ideas/questions</Text>
+      <Ionicons name="document-text-outline" size={32} color="#666" />
+    </TouchableOpacity>
+  </View>
+);
+
+// search bar
+const SearchBar = ({ searchText, onSearch }) => (
+  <View style={styles.searchContainer}>
+    <View style={styles.searchBar}>
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Search"
+        value={searchText}
+        onChangeText={onSearch}
+        placeholderTextColor="#999"
+      />
+      <Ionicons name="search" size={20} color="#666" />
+    </View>
+  </View>
+);
+
+// announcement cards
+const AnnouncementCard = ({ item, index }) => {
+  const isEven = index % 2 === 0;
+  const imageUrl = getImageUrl(item.image);
+  
+  return (
+    <TouchableOpacity 
+      style={[
+        styles.announcementCard,
+        isEven ? styles.evenCard : styles.oddCard
+      ]}
+      activeOpacity={0.8}
+    >
+      <View style={styles.cardContent}>
+        <Image
+          source={{ uri: imageUrl }}
+          style={styles.cardImage}
+          resizeMode="cover"
+          onLoad={() => console.log('Image loaded successfully:', imageUrl)}
+          onError={(error) => {
+            console.log('Image loading error:', error);
+            console.log('Failed URL:', imageUrl);
+          }}
+        />
+        <View style={styles.cardOverlay}>
+          <Text style={styles.cardTitle}>
+            {item.title || 'Event Title'}
+          </Text>
+        </View>
+        <View style={styles.cardArrow}>
+          <Ionicons name="chevron-forward" size={30} color="#fff" />
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+//home
+const HomeScreen = () => {
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+      <Header />
+      <View style={styles.centerContainer}>
+        <Ionicons name="home-outline" size={80} color="#007AFF" />
+        <Text style={styles.placeholderTitle}>Welcome to Home</Text>
+        <Text style={styles.placeholderText}>Your dashboard content will go here</Text>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+// Leaderboard Screen
+const LeaderboardScreen = () => {
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+      <Header />
+      <View style={styles.centerContainer}>
+        <Ionicons name="trophy-outline" size={80} color="#007AFF" />
+        <Text style={styles.placeholderTitle}>Leaderboard</Text>
+        <Text style={styles.placeholderText}>Rankings and scores will appear here</Text>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+// Announcements Screen - This is your main existing functionality
+const AnnouncementsScreen = () => {
+  const { announcements, loading, fetchAnnouncements } = useAnnouncementData();
+  const [filteredAnnouncements, setFilteredAnnouncements] = useState([]);
+  const [searchText, setSearchText] = useState('');
+
+  useEffect(() => {
+    setFilteredAnnouncements(announcements);
+  }, [announcements]);
 
   const handleSearch = (text) => {
     setSearchText(text);
@@ -84,53 +194,6 @@ const AnnouncementPage = () => {
       );
       setFilteredAnnouncements(filtered);
     }
-  };
-
-  const toggleSearch = () => {
-    setShowSearch(!showSearch);
-    if (showSearch) {
-      setSearchText('');
-      setFilteredAnnouncements(announcements);
-    }
-  };
-
-  const renderAnnouncementItem = ({ item, index }) => {
-    const isEven = index % 2 === 0;
-    const imageUrl = getImageUrl(item.image);
-    
-    console.log('Rendering item:', item);
-    console.log('Image URL:', imageUrl);
-    
-    return (
-      <TouchableOpacity 
-        style={[
-          styles.announcementCard,
-          isEven ? styles.evenCard : styles.oddCard
-        ]}
-        activeOpacity={0.8}
-      >
-        <View style={styles.cardContent}>
-          <Image
-            source={{ uri: imageUrl }}
-            style={styles.cardImage}
-            resizeMode="cover"
-            onLoad={() => console.log('Image loaded successfully:', imageUrl)}
-            onError={(error) => {
-              console.log('Image loading error:', error);
-              console.log('Failed URL:', imageUrl);
-            }}
-          />
-          <View style={styles.cardOverlay}>
-            <Text style={styles.cardTitle}>
-              {item.title || 'Event Title'}
-            </Text>
-          </View>
-          <View style={styles.cardArrow}>
-            <Ionicons name="chevron-forward" size={30} color="#fff" />
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
   };
 
   if (loading) {
@@ -147,47 +210,75 @@ const AnnouncementPage = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-      
-      {/* header */}
-      <View style={styles.header}>
-        <View style={styles.headerContent}>
-          <Text style={styles.headerTitle}>announcer</Text>
-          <Text style={styles.headerSubtitle}>DCB events/campaigns</Text>
-        </View>
-        <TouchableOpacity style={styles.themeButton}>
-          <Text style={styles.themeText}>theme ideas/questions</Text>
-          <Ionicons name="document-text-outline" size={32} color="#666" />
-        </TouchableOpacity>
-      </View>
-
-      {/*searchabr */}
-      <View style={styles.searchContainer}>
-        <View style={styles.searchBar}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search"
-            value={searchText}
-            onChangeText={handleSearch}
-            placeholderTextColor="#999"
-          />
-          <TouchableOpacity onPress={toggleSearch}>
-            <Ionicons name="search" size={20} color="#666" />
-          </TouchableOpacity>
-        </View>
-      </View>
-
+      <Header />
+      <SearchBar searchText={searchText} onSearch={handleSearch} />
       <FlatList
         data={filteredAnnouncements}
         keyExtractor={(item, index) => index.toString()}
-        renderItem={renderAnnouncementItem}
+        renderItem={({ item, index }) => <AnnouncementCard item={item} index={index} />}
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
         onRefresh={fetchAnnouncements}
         refreshing={loading}
       />
-
-
     </SafeAreaView>
+  );
+};
+
+// tabs
+const App = () => {
+  return (
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+            switch (route.name) {
+              case 'Home':
+                iconName = focused ? 'home' : 'home-outline';
+                break;
+              case 'Leaderboard':
+                iconName = focused ? 'trophy' : 'trophy-outline';
+                break;
+              case 'Announcements':
+                iconName = focused ? 'megaphone' : 'megaphone-outline';
+                break;
+              case 'Settings':
+                iconName = focused ? 'settings' : 'settings-outline';
+                break;
+              default:
+                iconName = 'home-outline';
+            }
+            return (
+              <View style={[
+                styles.tabIconContainer,
+                focused && styles.activeTabIconContainer,
+              ]}>
+                <Ionicons name={iconName} size={24} color={focused ? '#fff' : '#666'} />
+              </View>
+            );
+          },
+          tabBarLabel: ({ focused, color }) => {
+            return (
+              <Text style={[
+                styles.tabText,
+                focused && styles.activeTabText,
+              ]}>
+                {route.name}
+              </Text>
+            );
+          },
+          tabBarStyle: styles.tabBar,
+          tabBarShowLabel: true,
+          headerShown: false,
+        })}
+      >
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Leaderboard" component={LeaderboardScreen} />
+        <Tab.Screen name="Announcements" component={AnnouncementsScreen} />
+        <Tab.Screen name="Settings" component={SettingsScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 };
 
@@ -303,24 +394,86 @@ const styles = StyleSheet.create({
     color: '#fff',
     marginBottom: 8,
   },
-  cardSubtitle: {
-    fontSize: 16,
-    color: '#fff',
-    opacity: 0.9,
-    marginBottom: 4,
-  },
-  cardDescription: {
-    fontSize: 14,
-    color: '#fff',
-    opacity: 0.8,
-  },
   cardArrow: {
     position: 'absolute',
     right: 20,
     top: '50%',
     transform: [{ translateY: -15 }],
   },
-
+  // Tab Bar Styles
+  tabBar: {
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: '#e0e0e0',
+    paddingVertical: 15,
+    paddingBottom: 20,
+    paddingHorizontal: 20,
+    height: 90,
+  },
+  tabIconContainer: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#f0f0f0',
+    borderWidth: 2,
+    borderColor: '#ddd',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 4,
+  },
+  activeTabIconContainer: {
+    backgroundColor: '#007AFF',
+    borderColor: '#007AFF',
+  },
+  tabText: {
+    fontSize: 11,
+    color: '#666',
+    fontWeight: '500',
+    textAlign: 'center',
+  },
+  activeTabText: {
+    color: '#007AFF',
+    fontWeight: '600',
+  },
+  // Settings Screen Styles
+  settingsContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+    marginTop: 20,
+  },
+  settingsItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  settingsText: {
+    flex: 1,
+    fontSize: 16,
+    color: '#333',
+    marginLeft: 15,
+  },
+  // Placeholder Screen Styles
+  centerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  placeholderTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  placeholderText: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+  },
 });
 
-export default AnnouncementPage;
+export default App;
