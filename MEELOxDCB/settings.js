@@ -10,7 +10,7 @@ import {
   StatusBar,
   Animated,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons'; 
 
 const WheelPicker = ({ value, onChange, items }) => {
   const scrollY = useRef(new Animated.Value(0)).current;

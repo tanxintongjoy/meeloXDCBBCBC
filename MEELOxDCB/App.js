@@ -16,6 +16,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import SettingsScreen from './settings.js';
+import LeaderboardScreen from './leaderboardview.js';
+import HomeScreen from './realHome.js';
 
 const Tab = createBottomTabNavigator();
 
@@ -142,37 +144,7 @@ const AnnouncementCard = ({ item, index }) => {
   );
 };
 
-//home
-const HomeScreen = () => {
-  return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-      <Header />
-      <View style={styles.centerContainer}>
-        <Ionicons name="home-outline" size={80} color="#007AFF" />
-        <Text style={styles.placeholderTitle}>Welcome to Home</Text>
-        <Text style={styles.placeholderText}>Your dashboard content will go here</Text>
-      </View>
-    </SafeAreaView>
-  );
-};
-
-// Leaderboard Screen
-const LeaderboardScreen = () => {
-  return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-      <Header />
-      <View style={styles.centerContainer}>
-        <Ionicons name="trophy-outline" size={80} color="#007AFF" />
-        <Text style={styles.placeholderTitle}>Leaderboard</Text>
-        <Text style={styles.placeholderText}>Rankings and scores will appear here</Text>
-      </View>
-    </SafeAreaView>
-  );
-};
-
-// Announcements Screen - This is your main existing functionality
+//announcementscreen
 const AnnouncementsScreen = () => {
   const { announcements, loading, fetchAnnouncements } = useAnnouncementData();
   const [filteredAnnouncements, setFilteredAnnouncements] = useState([]);
