@@ -232,7 +232,7 @@ const HomeScreen = () => {
             </View>
           </View>
 
-          {/*summary -- daily */}
+
           <View style={styles.summarySection}>
             <Text style={styles.summaryTitle}>Daily summaries:</Text>
             <Text style={styles.goalsText}>
@@ -240,14 +240,14 @@ const HomeScreen = () => {
             </Text>
           </View>
 
-          {/* App Usage */}
+
           <View style={styles.appUsageSection}>
             {appUsage.map((app, index) => (
               <AppUsageItem key={index} app={app} />
             ))}
           </View>
 
-          {/*notifications */}
+
           {notifications.length > 0 && (
             <View style={styles.notificationsSection}>
               <Text style={styles.notificationsTitle}>Recent Notifications</Text>
@@ -260,7 +260,7 @@ const HomeScreen = () => {
             </View>
           )}
 
-          {/*badges selections */}
+
           <View style={styles.badgesSection}>
             <View style={styles.badgesHeader}>
               <Text style={styles.badgesTitle}>Badges</Text>
@@ -277,7 +277,7 @@ const HomeScreen = () => {
           </View>
         </View>
 
-        {/*add app */}
+
         <Modal
           visible={showAddAppModal}
           animationType="slide"
@@ -612,7 +612,7 @@ const styles = StyleSheet.create({
   navItem: {
     padding: 10,
   },
-  // Modal Styles
+
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',

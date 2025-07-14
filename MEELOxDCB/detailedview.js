@@ -24,7 +24,7 @@ export default function DetailedInfo() {
       );
       const data = await response.json();
       if (data.length > 0) {
-        setEvent(data[0]); {/*most recent data*/}
+        setEvent(data[0]); 
       } else {
         Alert.alert('No data', 'No announcement found.');
       }
@@ -64,15 +64,14 @@ export default function DetailedInfo() {
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
 
       <ScrollView contentContainerStyle={styles.content}>
-        {/* go back button */}
+
         <TouchableOpacity style={styles.backButton}>
           <Ionicons name="arrow-back-outline" size={28} color="#333" />
         </TouchableOpacity>
 
-        {/* header */}
+
         <Text style={styles.title}>{event.title || 'DCB Event!'}</Text>
 
-        {/* brief description/sub */}
         <Text style={styles.subtitle}>
           Igniting passion in little kids! and stuff
         </Text>
@@ -82,7 +81,6 @@ export default function DetailedInfo() {
           {event.description || 'No additional info.'}
         </Text>
 
-        {/* images Gallery */}
         {event.image?.startsWith('http') && (
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {[event.image].map((uri, index) => (
@@ -96,7 +94,7 @@ export default function DetailedInfo() {
           </ScrollView>
         )}
 
-        {/* Contact */}
+
         <Text style={styles.contact}>
           {event.Contacts || 'No contact info'}
         </Text>
