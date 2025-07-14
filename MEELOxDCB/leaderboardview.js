@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   StatusBar,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // ✅ ADD THIS
+import { Ionicons } from '@expo/vector-icons';
 
 const LeaderboardScreen = () => {
   return (
