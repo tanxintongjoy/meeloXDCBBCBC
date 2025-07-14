@@ -243,6 +243,7 @@ const App = () => {
           tabBarStyle: styles.tabBar,
           tabBarShowLabel: true,
           headerShown: false,
+          tabBarItemStyle: { width: 120 },
         })}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
@@ -377,12 +378,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderTopWidth: 1,
     borderTopColor: '#e0e0e0',
-    paddingVertical: 15,
-    paddingBottom: 20,
+    paddingVertical: 5,
+    paddingBottom: 5,
     paddingHorizontal: 20,
-    height: 90,
+    height: 120,
   },
   tabIconContainer: {
+    marginTop: 40,
     width: 50,
     height: 50,
     borderRadius: 25,
@@ -391,21 +393,23 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 4,
+    marginBottom: 10,
   },
   activeTabIconContainer: {
     backgroundColor: '#007AFF',
     borderColor: '#007AFF',
   },
   tabText: {
-    fontSize: 11,
+    fontSize: 10,
+    width: 100,
+    marginTop: 30,
     color: '#666',
     fontWeight: '500',
     textAlign: 'center',
   },
   activeTabText: {
     color: '#007AFF',
-    fontWeight: '600',
+    fontWeight: '700',
   },
   // Settings Screen Styles
   settingsContainer: {
