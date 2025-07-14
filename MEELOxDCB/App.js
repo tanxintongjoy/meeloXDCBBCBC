@@ -243,6 +243,7 @@ const App = () => {
           tabBarStyle: styles.tabBar,
           tabBarShowLabel: true,
           headerShown: false,
+          tabBarItemStyle: { width: 120 },
         })}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
@@ -399,7 +400,8 @@ const styles = StyleSheet.create({
     borderColor: '#007AFF',
   },
   tabText: {
-    fontSize: 9.8,
+    fontSize: 10,
+    width: 100,
     marginTop: 30,
     color: '#666',
     fontWeight: '500',
@@ -407,7 +409,7 @@ const styles = StyleSheet.create({
   },
   activeTabText: {
     color: '#007AFF',
-    fontWeight: '600',
+    fontWeight: '700',
   },
   // Settings Screen Styles
   settingsContainer: {
