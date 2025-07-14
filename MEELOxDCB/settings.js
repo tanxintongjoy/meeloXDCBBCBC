@@ -27,7 +27,6 @@ const WheelPicker = ({ value, onChange, items }) => {
 
   return (
     <View style={styles.wheelWrapper}>
-      <View style={styles.wheelHighlight} />
       <Animated.ScrollView
         showsVerticalScrollIndicator={false}
         snapToInterval={itemHeight}
@@ -36,13 +35,19 @@ const WheelPicker = ({ value, onChange, items }) => {
         contentOffset={{ y: selectedIndex * itemHeight }}
       >
         <View style={{ height: itemHeight * 2 }} />
-        {items.map((item, index) => (
-          <View key={index} style={styles.wheelItem}>
-            <Text style={styles.wheelText}>{item.toString().padStart(2, '0')}</Text>
-          </View>
-        ))}
+        {items.map((item, index) => {
+          const isSelected = index === selectedIndex;
+          return (
+            <View key={index} style={styles.wheelItem}>
+              <Text style={isSelected ? styles.wheelTextSelected : styles.wheelText}>
+                {item.toString().padStart(2, '0')}
+              </Text>
+            </View>
+          );
+        })}
         <View style={{ height: itemHeight * 2 }} />
       </Animated.ScrollView>
+      <View style={styles.wheelHighlight} pointerEvents="none" />
     </View>
   );
 };
@@ -201,6 +206,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 200,
     overflow: 'hidden',
+    position: 'relative',
   },
   wheelHighlight: {
     position: 'absolute',
@@ -210,8 +216,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: '#ccc',
-    backgroundColor: '#f9f9f9',
-    zIndex: 1,
+    zIndex: 0,
   },
   wheelItem: {
     height: 40,
@@ -220,7 +225,14 @@ const styles = StyleSheet.create({
   },
   wheelText: {
     fontSize: 20,
-    color: '#333',
+    color: '#888',
+    zIndex: 1,
+  },
+  wheelTextSelected: {
+    fontSize: 20,
+    color: '#111',
+    fontWeight: 700,
+    zIndex: 1,
   },
   section: {
     marginTop: 30,
