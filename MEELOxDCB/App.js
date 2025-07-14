@@ -1,17 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  Image,
-  TouchableOpacity,
-  TextInput,
-  ActivityIndicator,
-  Alert,
-  SafeAreaView,
-  StatusBar
-} from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, TextInput, ActivityIndicator, Alert, SafeAreaView, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
@@ -77,7 +65,7 @@ const getImageUrl = (imageUrl) => {
   return 'https://via.placeholder.com/300x200/4A90E2/FFFFFF?text=No+Image';
 };
 
-// header
+
 const Header = () => (
   <View style={styles.header}>
     <View style={styles.headerContent}>
@@ -91,7 +79,7 @@ const Header = () => (
   </View>
 );
 
-// search bar
+
 const SearchBar = ({ searchText, onSearch }) => (
   <View style={styles.searchContainer}>
     <View style={styles.searchBar}>
@@ -107,7 +95,6 @@ const SearchBar = ({ searchText, onSearch }) => (
   </View>
 );
 
-// announcement cards
 const AnnouncementCard = ({ item, index }) => {
   const isEven = index % 2 === 0;
   const imageUrl = getImageUrl(item.image);
@@ -144,7 +131,7 @@ const AnnouncementCard = ({ item, index }) => {
   );
 };
 
-//announcementscreen
+
 const AnnouncementsScreen = () => {
   const { announcements, loading, fetchAnnouncements } = useAnnouncementData();
   const [filteredAnnouncements, setFilteredAnnouncements] = useState([]);
@@ -197,7 +184,7 @@ const AnnouncementsScreen = () => {
   );
 };
 
-// tabs
+
 const App = () => {
   return (
     <NavigationContainer>
@@ -243,7 +230,6 @@ const App = () => {
           tabBarStyle: styles.tabBar,
           tabBarShowLabel: true,
           headerShown: false,
-          tabBarItemStyle: { width: 120 },
         })}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
@@ -373,18 +359,16 @@ const styles = StyleSheet.create({
     top: '50%',
     transform: [{ translateY: -15 }],
   },
-  // Tab Bar Styles
   tabBar: {
     backgroundColor: '#fff',
     borderTopWidth: 1,
     borderTopColor: '#e0e0e0',
-    paddingVertical: 5,
-    paddingBottom: 5,
+    paddingVertical: 15,
+    paddingBottom: 20,
     paddingHorizontal: 20,
-    height: 120,
+    height: 90,
   },
   tabIconContainer: {
-    marginTop: 40,
     width: 50,
     height: 50,
     borderRadius: 25,
@@ -393,25 +377,22 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 10,
+    marginBottom: 4,
   },
   activeTabIconContainer: {
     backgroundColor: '#007AFF',
     borderColor: '#007AFF',
   },
   tabText: {
-    fontSize: 10,
-    width: 100,
-    marginTop: 30,
+    fontSize: 11,
     color: '#666',
     fontWeight: '500',
     textAlign: 'center',
   },
   activeTabText: {
     color: '#007AFF',
-    fontWeight: '700',
+    fontWeight: '600',
   },
-  // Settings Screen Styles
   settingsContainer: {
     flex: 1,
     backgroundColor: '#fff',
@@ -431,7 +412,7 @@ const styles = StyleSheet.create({
     color: '#333',
     marginLeft: 15,
   },
-  // Placeholder Screen Styles
+
   centerContainer: {
     flex: 1,
     justifyContent: 'center',
