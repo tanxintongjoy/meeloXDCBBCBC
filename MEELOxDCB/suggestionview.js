@@ -23,7 +23,7 @@ const ThemeIdeasScreen = ({ navigation }) => {
 
   const submitToSheet = async (data) => {
     setIsSubmitting(true);
-    
+
     try {
       const response = await fetch(API_URL, {
         method: 'POST',
@@ -38,14 +38,16 @@ const ThemeIdeasScreen = ({ navigation }) => {
 
       if (response.ok) {
         Alert.alert('Success', 'Successfully submitted!', [
-          { text: 'OK', onPress: () => {
-
-            if (data.type === 'theme_idea') {
-              setThemeIdea('');
-            } else if (data.type === 'theme_question') {
-              setThemeQuestion('');
-            }
-          }}
+          {
+            text: 'OK',
+            onPress: () => {
+              if (data.type === 'theme_idea') {
+                setThemeIdea('');
+              } else if (data.type === 'theme_question') {
+                setThemeQuestion('');
+              }
+            },
+          },
         ]);
       } else {
         Alert.alert('Error', 'Error submitting. Please try again.');
@@ -62,7 +64,7 @@ const ThemeIdeasScreen = ({ navigation }) => {
       submitToSheet({
         type: 'theme_idea',
         content: themeIdea.trim(),
-        category: 'Theme Ideas'
+        category: 'Theme Ideas',
       });
     }
   };
@@ -72,7 +74,7 @@ const ThemeIdeasScreen = ({ navigation }) => {
       submitToSheet({
         type: 'theme_question',
         content: themeQuestion.trim(),
-        category: 'Theme Questions'
+        category: 'Theme Questions',
       });
     }
   };
@@ -80,12 +82,9 @@ const ThemeIdeasScreen = ({ navigation }) => {
   const MainScreen = () => (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-      
+
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="#333" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Theme Ideas/Questions</Text>
@@ -95,7 +94,7 @@ const ThemeIdeasScreen = ({ navigation }) => {
         <Text style={styles.subtitle}>
           Submit theme ideas or questions anonymously! or vote on campaign themes and features
         </Text>
-        
+
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[styles.actionButton, styles.redButton]}
@@ -104,7 +103,7 @@ const ThemeIdeasScreen = ({ navigation }) => {
             <Text style={styles.buttonTitle}>Theme ideas</Text>
             <Text style={styles.buttonSubtitle}>Any ideas which came into mind?</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity
             style={[styles.actionButton, styles.slateButton]}
             onPress={() => setCurrentScreen('themeQuestions')}
@@ -112,7 +111,7 @@ const ThemeIdeasScreen = ({ navigation }) => {
             <Text style={styles.buttonTitle}>Theme questions</Text>
             <Text style={styles.buttonSubtitle}>Curious? Feel free to ask!</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity
             style={[styles.actionButton, styles.grayButton]}
             onPress={() => setCurrentScreen('voting')}
@@ -127,23 +126,17 @@ const ThemeIdeasScreen = ({ navigation }) => {
   const ThemeIdeasFormScreen = () => (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-      
+
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => setCurrentScreen('main')}
-        >
+        <TouchableOpacity style={styles.backButton} onPress={() => setCurrentScreen('main')}>
           <Ionicons name="arrow-back" size={24} color="#333" />
         </TouchableOpacity>
       </View>
 
       <ScrollView style={styles.content}>
         <View style={styles.formContainer}>
-          <TouchableOpacity style={[styles.formButton, styles.redButton]}>
-          </TouchableOpacity>
-          
           <Text style={styles.formLabel}>Any ideas which came into mind?</Text>
-          
+
           <TextInput
             style={styles.textArea}
             value={themeIdea}
@@ -154,12 +147,12 @@ const ThemeIdeasScreen = ({ navigation }) => {
             textAlignVertical="top"
             editable={!isSubmitting}
           />
-          
+
           <TouchableOpacity
             style={[
               styles.submitButton,
               styles.redButton,
-              (!themeIdea.trim() || isSubmitting) && styles.disabledButton
+              (!themeIdea.trim() || isSubmitting) && styles.disabledButton,
             ]}
             onPress={handleThemeIdeaSubmit}
             disabled={isSubmitting || !themeIdea.trim()}
@@ -178,12 +171,9 @@ const ThemeIdeasScreen = ({ navigation }) => {
   const ThemeQuestionsFormScreen = () => (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-      
+
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => setCurrentScreen('main')}
-        >
+        <TouchableOpacity style={styles.backButton} onPress={() => setCurrentScreen('main')}>
           <Ionicons name="arrow-back" size={24} color="#333" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Theme questions</Text>
@@ -191,12 +181,8 @@ const ThemeIdeasScreen = ({ navigation }) => {
 
       <ScrollView style={styles.content}>
         <View style={styles.formContainer}>
-          <TouchableOpacity style={[styles.formButton, styles.slateButton]}>
-            <Text style={styles.formButtonText}>Theme questions</Text>
-          </TouchableOpacity>
-          
           <Text style={styles.formLabel}>Curious? Feel free to ask!</Text>
-          
+
           <TextInput
             style={styles.textArea}
             value={themeQuestion}
@@ -207,12 +193,12 @@ const ThemeIdeasScreen = ({ navigation }) => {
             textAlignVertical="top"
             editable={!isSubmitting}
           />
-          
+
           <TouchableOpacity
             style={[
               styles.submitButton,
               styles.slateButton,
-              (!themeQuestion.trim() || isSubmitting) && styles.disabledButton
+              (!themeQuestion.trim() || isSubmitting) && styles.disabledButton,
             ]}
             onPress={handleThemeQuestionSubmit}
             disabled={isSubmitting || !themeQuestion.trim()}
@@ -231,12 +217,9 @@ const ThemeIdeasScreen = ({ navigation }) => {
   const VotingScreen = () => (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-      
+
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => setCurrentScreen('main')}
-        >
+        <TouchableOpacity style={styles.backButton} onPress={() => setCurrentScreen('main')}>
           <Ionicons name="arrow-back" size={24} color="#333" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Voting</Text>
@@ -244,7 +227,12 @@ const ThemeIdeasScreen = ({ navigation }) => {
 
       <ScrollView style={styles.content}>
         <View style={styles.votingContainer}>
-            
+          <Text style={styles.subtitle}>Voting features coming soon!</Text>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+
   switch (currentScreen) {
     case 'themeIdeas':
       return <ThemeIdeasFormScreen />;
@@ -328,18 +316,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-  formButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 25,
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  formButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
   formLabel: {
     fontSize: 16,
     color: '#333',
@@ -371,87 +347,6 @@ const styles = StyleSheet.create({
   },
   votingContainer: {
     gap: 15,
-  },
-  votingCard: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  votingHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  optionText: {
-    fontSize: 14,
-    color: '#666',
-  },
-  votingTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 5,
-  },
-  votingSubtitle: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 15,
-  },
-  colorOptions: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  colorOption: {
-    width: 60,
-    height: 40,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  colorCircle: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: '#fff',
-  },
-  colorSquare: {
-    width: 20,
-    height: 20,
-    backgroundColor: '#fff',
-  },
-  votingControls: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  controlButtons: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  controlButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 4,
-    backgroundColor: '#E5E5E5',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  controlDisplay: {
-    backgroundColor: '#F5F5F5',
-    borderRadius: 8,
-    padding: 8,
-  },
-  displayBox: {
-    width: 48,
-    height: 32,
-    backgroundColor: '#fff',
-    borderRadius: 4,
   },
 });
 
