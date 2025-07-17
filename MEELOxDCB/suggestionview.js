@@ -227,7 +227,7 @@ const ThemeIdeasScreen = ({ navigation }) => {
 
       <ScrollView style={styles.content}>
         <View style={styles.votingContainer}>
-          <Text style={styles.subtitle}>Voting features coming soon!</Text>
+          <Text style={styles.subtitle}>idk</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
