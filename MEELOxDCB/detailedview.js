@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -8,95 +8,61 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
-  ActivityIndicator,
-  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function DetailedInfo() {
-  const [event, setEvent] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  const fetchEvent = async () => {
-    try {
-      const response = await fetch(
-        'https://api.sheetbest.com/sheets/0a5e867e-2e01-4211-a422-066db24730ad'
-      );
-      const data = await response.json();
-      if (data.length > 0) {
-        setEvent(data[0]); 
-      } else {
-        Alert.alert('No data', 'No announcement found.');
-      }
-    } catch (error) {
-      console.error('Fetch error:', error);
-      Alert.alert('Error', 'Could not load event.');
-    } finally {
-      setLoading(false);
+const getImageUrl = (url) => {
+  if (!url) return null;
+  if (url.includes('drive.google.com')) {
+    let fileId = '';
+    if (url.includes('/open?id=')) fileId = url.split('/open?id=')[1];
+    else if (url.includes('/file/d/')) {
+      const match = url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/);
+      if (match) fileId = match[1];
+    } else if (url.includes('id=')) {
+      fileId = url.split('id=')[1].split('&')[0];
     }
-  };
-
-  useEffect(() => {
-    fetchEvent();
-  }, []);
-
-  if (loading) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.loading}>
-          <ActivityIndicator size="large" color="#007AFF" />
-          <Text style={styles.loadingText}>Loading announcement...</Text>
-        </View>
-      </SafeAreaView>
-    );
+    return `https://drive.google.com/uc?export=view&id=${fileId}`;
   }
+  return url.startsWith('http') ? url : null;
+};
 
-  if (!event) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <Text style={styles.errorText}>No event data available.</Text>
-      </SafeAreaView>
-    );
-  }
+export default function DetailedInfo({ navigation, route }) {
+  const { item } = route.params || {};
+
+  const imageUrl = getImageUrl(item?.image);
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
 
       <ScrollView contentContainerStyle={styles.content}>
-
-        <TouchableOpacity style={styles.backButton}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back-outline" size={28} color="#333" />
         </TouchableOpacity>
 
-
-        <Text style={styles.title}>{event.title || 'DCB Event!'}</Text>
+        <Text style={styles.title}>{item?.title || 'DCB Event!'}</Text>
 
         <Text style={styles.subtitle}>
-          Igniting passion in little kids! and stuff
-        </Text>
-
+          {item?.category ? item.category : 'Category not specified'}
+          </Text>
 
         <Text style={styles.description}>
-          {event.description || 'No additional info.'}
+          {item?.description || 'No additional info.'}
         </Text>
 
-        {event.image?.startsWith('http') && (
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {[event.image].map((uri, index) => (
-              <Image
-                key={index}
-                source={{ uri }}
-                style={styles.image}
-                resizeMode="cover"
-              />
-            ))}
+        {imageUrl && (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginVertical: 20 }}>
+            <Image
+              source={{ uri: imageUrl }}
+              style={styles.image}
+              resizeMode="cover"
+            />
           </ScrollView>
         )}
 
-
         <Text style={styles.contact}>
-          {event.Contacts || 'No contact info'}
+          {item?.Contacts || 'No contact info'}
         </Text>
       </ScrollView>
     </SafeAreaView>
@@ -104,24 +70,10 @@ export default function DetailedInfo() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  content: {
-    padding: 20,
-    paddingTop: 10,
-  },
-  backButton: {
-    marginBottom: 10,
-    width: 36,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#000',
-    marginBottom: 8,
-  },
+  container: { flex: 1, backgroundColor: '#fff' },
+  content: { padding: 20, paddingTop: 10 },
+  backButton: { marginBottom: 10, width: 36 },
+  title: { fontSize: 28, fontWeight: 'bold', color: '#000', marginBottom: 8 },
   subtitle: {
     fontWeight: 'bold',
     fontSize: 16,
@@ -131,38 +83,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderRadius: 6,
   },
-  description: {
-    fontSize: 16,
-    lineHeight: 22,
-    color: '#333',
-    marginBottom: 20,
-  },
-  image: {
-    width: 250,
-    height: 140,
-    borderRadius: 10,
-    marginRight: 12,
-  },
-  contact: {
-    fontSize: 14,
-    color: '#888',
-    marginTop: 30,
-    textAlign: 'center',
-  },
-  loading: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingText: {
-    marginTop: 12,
-    fontSize: 16,
-    color: '#666',
-  },
-  errorText: {
-    marginTop: 40,
-    fontSize: 18,
-    color: 'red',
-    textAlign: 'center',
-  },
+  description: { fontSize: 16, lineHeight: 22, color: '#333', marginBottom: 20 },
+  image: { width: 250, height: 140, borderRadius: 10, marginRight: 12 },
+  contact: { fontSize: 14, color: '#888', marginTop: 30, textAlign: 'center' },
 });

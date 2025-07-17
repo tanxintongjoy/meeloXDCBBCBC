@@ -21,6 +21,7 @@ import SettingsScreen from './settings.js';
 import LeaderboardScreen from './leaderboardview.js';
 import HomeScreen from './realHome.js';
 import ThemeIdeasScreen from './suggestionview.js';
+import DetailedInfo from './detailedview.js';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -94,11 +95,16 @@ const SearchBar = ({ searchText, onSearch }) => (
   </View>
 );
 
-const AnnouncementCard = ({ item, index }) => {
+// AnnouncementCard receives navigation so it can navigate on press
+const AnnouncementCard = ({ item, index, navigation }) => {
   const isEven = index % 2 === 0;
   const imageUrl = getImageUrl(item.image);
   return (
-    <TouchableOpacity style={[styles.announcementCard, isEven ? styles.evenCard : styles.oddCard]}>
+    <TouchableOpacity
+      style={[styles.announcementCard, isEven ? styles.evenCard : styles.oddCard]}
+      onPress={() => navigation.navigate('DetailedInfo', { item })}
+      activeOpacity={0.8}
+    >
       <View style={styles.cardContent}>
         <Image source={{ uri: imageUrl }} style={styles.cardImage} resizeMode="cover" />
         <View style={styles.cardOverlay}>
@@ -154,7 +160,7 @@ const AnnouncementsScreen = ({ navigation }) => {
       <FlatList
         data={filteredAnnouncements}
         keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item, index }) => <AnnouncementCard item={item} index={index} />}
+        renderItem={({ item, index }) => <AnnouncementCard item={item} index={index} navigation={navigation} />}
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
         onRefresh={fetchAnnouncements}
@@ -163,7 +169,7 @@ const AnnouncementsScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-// tabs
+
 const TabNavigator = () => (
   <Tab.Navigator
     screenOptions={({ route }) => ({
@@ -213,6 +219,7 @@ export default function App() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="MainTabs" component={TabNavigator} />
         <Stack.Screen name="ThemeIdeas" component={ThemeIdeasScreen} />
+        <Stack.Screen name="DetailedInfo" component={DetailedInfo} />
       </Stack.Navigator>
     </NavigationContainer>
   );
