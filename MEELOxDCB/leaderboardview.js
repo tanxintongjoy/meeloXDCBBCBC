@@ -3,45 +3,260 @@ import {
   View,
   Text,
   StyleSheet,
+  ScrollView,
   SafeAreaView,
   StatusBar,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; 
+import { Ionicons } from '@expo/vector-icons';
 
-const LeaderboardScreen = () => {
-  return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-      <View style={styles.centerContainer}>
-        <Ionicons name="trophy-outline" size={80} color="#007AFF" />
-        <Text style={styles.placeholderTitle}>Leaderboard</Text>
-        <Text style={styles.placeholderText}>Rankings and scores will appear here</Text>
-      </View>
-    </SafeAreaView>
-  );
+const streakData = {
+  currentStreak: 121,
+  weekDays: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+  completedDays: [0],
 };
 
+const highestSSTreekers = [
+  { rank: 1, username: 'coolclara451', score: 100 },
+  { rank: 2, username: 'imEmmanuel', score: 75 },
+  { rank: 3, username: 'jiangkorealuvENGforlife12', score: 50 },
+];
+
+const badgeCollectors = [
+  { rank: 1, username: 'coolclara451', badges: 5 },
+  { rank: 2, username: 'imEmmanuel', badges: 3 },
+];
+
+export default function LeaderboardScreen() {
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="dark-content" />
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.header}>Leaderboard</Text>
+
+    //streak
+        <View style={styles.card}>
+          <View style={styles.rowCenter}>
+            <Ionicons name="flame" size={32} color="#f97316" />
+            <Text style={styles.streakText}>{streakData.currentStreak}</Text>
+          </View>
+          <Text style={styles.streakLabel}>day streak!</Text>
+
+          <View style={styles.weekRow}>
+            {streakData.weekDays.map((day, index) => (
+              <View key={day} style={styles.dayColumn}>
+                <Text style={styles.dayText}>{day}</Text>
+                <View
+                  style={[
+                    styles.dayCircle,
+                    streakData.completedDays.includes(index) && styles.dayCompleted,
+                  ]}
+                >
+                  {streakData.completedDays.includes(index) && (
+                    <Text style={styles.check}>✓</Text>
+                  )}
+                </View>
+              </View>
+            ))}
+          </View>
+
+          <Text style={styles.streakTip}>
+            Great start! Keep your <Text style={styles.streakHighlight}>perfect streak</Text> going tomorrow.
+          </Text>
+        </View>
+// stats
+        <View style={styles.statsRow}>
+          <View style={styles.statsCard}>
+            <Text style={styles.statsNumber}>10</Text>
+            <Text style={styles.statsLabel}>Badges</Text>
+          </View>
+          <View style={styles.statsCard}>
+            <Text style={styles.statsNumber}>127</Text>
+            <Text style={styles.statsLabel}>Points</Text>
+          </View>
+        </View>
+//sstreakersyup!
+        <View style={styles.listCard}>
+          <Text style={styles.sectionTitle}>Highest SSTreekers</Text>
+          {highestSSTreekers.map((user) => (
+            <View key={user.rank} style={styles.listItem}>
+              <Text style={styles.listText}>
+                {user.rank}. {user.username}
+              </Text>
+              <Text style={styles.listScore}>{user.score}</Text>
+            </View>
+          ))}
+        </View>
+
+     // badge collectors
+        <View style={styles.listCard}>
+          <Text style={styles.sectionTitle}>Badge Collectors</Text>
+          {badgeCollectors.map((user) => (
+            <View key={user.rank} style={styles.listItem}>
+              <Text style={styles.listText}>
+                {user.rank}. {user.username}
+              </Text>
+              <Text style={styles.listScore}>{user.badges}</Text>
+            </View>
+          ))}
+        </View>
+
+     // the motivational tip
+        <View style={styles.tipBubble}>
+          <Text style={styles.tipLabel}>Motivation Tip:</Text>
+          <Text style={styles.tipText}>“Stay consistent and hydrate!”</Text>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#fef9c3',
   },
-  centerContainer: {
-    flex: 1,
+  container: {
+    padding: 20,
+  },
+  header: {
+    fontSize: 32,
+    fontWeight: '900',
+    marginBottom: 20,
+    color: '#1f2937',
+  },
+  card: {
+    backgroundColor: '#1f2937',
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 20,
+  },
+  rowCenter: {
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  placeholderTitle: {
-    fontSize: 28,
+  streakText: {
+    fontSize: 32,
+    color: 'white',
+    marginLeft: 10,
     fontWeight: 'bold',
-    marginTop: 16,
-    color: '#333',
   },
-  placeholderText: {
+  streakLabel: {
+    color: '#fb923c',
+    textAlign: 'center',
+    marginBottom: 10,
+    fontWeight: '600',
+  },
+  weekRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 12,
+  },
+  dayColumn: {
+    alignItems: 'center',
+  },
+  dayText: {
+    color: '#d1d5db',
+    fontSize: 12,
+    marginBottom: 4,
+  },
+  dayCircle: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#4b5563',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dayCompleted: {
+    backgroundColor: '#f97316',
+  },
+  check: {
+    color: 'white',
     fontSize: 16,
-    color: '#888',
-    marginTop: 8,
+  },
+  streakTip: {
+    textAlign: 'center',
+    color: '#e5e7eb',
+    fontSize: 12,
+  },
+  streakHighlight: {
+    color: '#fb923c',
+    fontWeight: '600',
+  },
+  statsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  statsCard: {
+    backgroundColor: 'white',
+    borderColor: '#9ca3af',
+    borderWidth: 2,
+    borderRadius: 12,
+    padding: 16,
+    width: '48%',
+    alignItems: 'center',
+  },
+  statsNumber: {
+    fontSize: 24,
+    fontWeight: '900',
+    color: '#1f2937',
+  },
+  statsLabel: {
+    fontSize: 14,
+    color: '#4b5563',
+  },
+  listCard: {
+    backgroundColor: '#fde68a',
+    borderColor: '#facc15',
+    borderWidth: 3,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '800',
+    textAlign: 'center',
+    color: '#1f2937',
+    marginBottom: 10,
+  },
+  listItem: {
+    backgroundColor: 'white',
+    borderColor: '#9ca3af',
+    borderWidth: 2,
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  listText: {
+    fontWeight: '600',
+    color: '#1f2937',
+  },
+  listScore: {
+    fontSize: 18,
+    fontWeight: '900',
+    color: '#dc2626',
+  },
+  tipBubble: {
+    backgroundColor: 'white',
+    borderColor: '#9ca3af',
+    borderWidth: 2,
+    borderRadius: 12,
+    padding: 16,
+    alignItems: 'center',
+  },
+  tipLabel: {
+    fontSize: 12,
+    color: '#6b7280',
+    marginBottom: 4,
+  },
+  tipText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#1f2937',
   },
 });
-
-export default LeaderboardScreen;
