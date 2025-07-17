@@ -26,6 +26,12 @@ const badgeCollectors = [
   { rank: 2, username: 'imEmmanuel', badges: 3 },
 ];
 
+const digitalWellnessHeros = [
+  { rank: 1, username: 'coolclara451' },
+  { rank: 2, username: 'imEmmanuel' },
+  { rank: 3, username: 'jiangkorealuvENGforlife12' },
+];
+
 export default function LeaderboardScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -33,48 +39,54 @@ export default function LeaderboardScreen() {
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.header}>Leaderboard</Text>
 
-    //streak
-        <View style={styles.card}>
-          <View style={styles.rowCenter}>
-            <Ionicons name="flame" size={32} color="#f97316" />
-            <Text style={styles.streakText}>{streakData.currentStreak}</Text>
-          </View>
-          <Text style={styles.streakLabel}>day streak!</Text>
+//streakstats
+        <View style={styles.streakAndStatsRow}>
+//streakkkk
+          <View style={styles.streakCard}>
+            <View style={styles.rowCenter}>
+              <Ionicons name="flame" size={32} color="#f97316" />
+              <Text style={styles.streakText}>{streakData.currentStreak}</Text>
+            </View>
+            <Text style={styles.streakLabel}>day streak!</Text>
 
-          <View style={styles.weekRow}>
-            {streakData.weekDays.map((day, index) => (
-              <View key={day} style={styles.dayColumn}>
-                <Text style={styles.dayText}>{day}</Text>
-                <View
-                  style={[
-                    styles.dayCircle,
-                    streakData.completedDays.includes(index) && styles.dayCompleted,
-                  ]}
-                >
-                  {streakData.completedDays.includes(index) && (
-                    <Text style={styles.check}>✓</Text>
-                  )}
+            <View style={styles.weekRow}>
+              {streakData.weekDays.map((day, index) => (
+                <View key={day} style={styles.dayColumn}>
+                  <Text style={styles.dayText}>{day}</Text>
+                  <View
+                    style={[
+                      styles.dayCircle,
+                      streakData.completedDays.includes(index) && styles.dayCompleted,
+                    ]}
+                  >
+                    {streakData.completedDays.includes(index) && (
+                      <Text style={styles.check}>✓</Text>
+                    )}
+                  </View>
                 </View>
-              </View>
-            ))}
+              ))}
+            </View>
+
+            <Text style={styles.streakTip}>
+              Great start! Keep your{' '}
+              <Text style={styles.streakHighlight}>perfect streak</Text> going tomorrow.
+            </Text>
           </View>
 
-          <Text style={styles.streakTip}>
-            Great start! Keep your <Text style={styles.streakHighlight}>perfect streak</Text> going tomorrow.
-          </Text>
-        </View>
-// stats
-        <View style={styles.statsRow}>
-          <View style={styles.statsCard}>
-            <Text style={styles.statsNumber}>10</Text>
-            <Text style={styles.statsLabel}>Badges</Text>
-          </View>
-          <View style={styles.statsCard}>
-            <Text style={styles.statsNumber}>127</Text>
-            <Text style={styles.statsLabel}>Points</Text>
+     //stats - badges + points
+          <View style={styles.statsColumn}>
+            <View style={styles.statsCard}>
+              <Text style={styles.statsNumber}>10</Text>
+              <Text style={styles.statsLabel}>Badges</Text>
+            </View>
+            <View style={styles.statsCard}>
+              <Text style={styles.statsNumber}>127</Text>
+              <Text style={styles.statsLabel}>Points</Text>
+            </View>
           </View>
         </View>
-//sstreakersyup!
+
+// sstreakers
         <View style={styles.listCard}>
           <Text style={styles.sectionTitle}>Highest SSTreekers</Text>
           {highestSSTreekers.map((user) => (
@@ -87,7 +99,7 @@ export default function LeaderboardScreen() {
           ))}
         </View>
 
-     // badge collectors
+// badge collectors
         <View style={styles.listCard}>
           <Text style={styles.sectionTitle}>Badge Collectors</Text>
           {badgeCollectors.map((user) => (
@@ -99,11 +111,22 @@ export default function LeaderboardScreen() {
             </View>
           ))}
         </View>
+// digital wellness heros
+        <View style={styles.listCard}>
+          <Text style={styles.sectionTitle}>Digital Wellness Heros!</Text>
+          {digitalWellnessHeros.map((user) => (
+            <View key={user.rank} style={styles.listItem}>
+              <Text style={styles.listText}>
+                {user.rank}. {user.username}
+              </Text>
+            </View>
+          ))}
+        </View>
 
-     // the motivational tip
+// motivational tip - add in if the picker - bool
         <View style={styles.tipBubble}>
           <Text style={styles.tipLabel}>Motivation Tip:</Text>
-          <Text style={styles.tipText}>“Stay consistent and hydrate!”</Text>
+          <Text style={styles.tipText}>“pibble pibble pibble”</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -124,11 +147,21 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: '#1f2937',
   },
-  card: {
+  streakAndStatsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  streakCard: {
     backgroundColor: '#1f2937',
     borderRadius: 20,
     padding: 20,
-    marginBottom: 20,
+    flex: 1,
+    marginRight: 10,
+  },
+  statsColumn: {
+    justifyContent: 'space-between',
+    width: 120,
   },
   rowCenter: {
     flexDirection: 'row',
@@ -184,18 +217,12 @@ const styles = StyleSheet.create({
     color: '#fb923c',
     fontWeight: '600',
   },
-  statsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
   statsCard: {
     backgroundColor: 'white',
     borderColor: '#9ca3af',
     borderWidth: 2,
     borderRadius: 12,
     padding: 16,
-    width: '48%',
     alignItems: 'center',
   },
   statsNumber: {
