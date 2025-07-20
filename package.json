@@ -4,7 +4,9 @@
     "@react-navigation/stack": "^7.4.2",
     "expo": "^53.0.19",
     "react-native-screens": "~4.11.1",
-    "react-native-safe-area-context": "5.4.0"
+    "react-native-safe-area-context": "5.4.0",
+    "react": "19.0.0",
+    "react-native": "0.79.5"
   },
   "devDependencies": {
     "@types/react": "~19.0.10",
@@ -13,8 +15,10 @@
   },
   "scripts": {
     "start": "expo start",
-    "ios": "expo start --ios",
-    "android": "expo start --android",
+    "ios": "expo run:ios",
+    "android": "expo run:android",
     "web": "expo start --web"
-  }
+  },
+  "name": "meelo-x-DCB",
+  "version": "1.0.0"
 }

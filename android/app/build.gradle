@@ -1,0 +1,47 @@
+// android/app/build.gradle
+
+apply plugin: "com.android.application"
+apply plugin: "com.facebook.react"
+
+android {
+    compileSdkVersion 35  // Must be 30 or higher for Java 9+ source compatibility
+
+    defaultConfig {
+        applicationId "com.yourappname"  // Replace with your app's package name
+        minSdkVersion 24
+        targetSdkVersion 35
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+    }
+
+
+    packagingOptions {
+        pickFirst '**/libc++_shared.so'
+    }
+
+    // Java & Kotlin compatibility options
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+
+    // Other configurations (signing configs, build types etc.) if you have them
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+
+    implementation "com.facebook.react:react-native:+"  // From node_modules
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.20"
+
+    // Add other dependencies here if needed
+}
+
+// Run react-native config automatically
+apply from: new File(["node", "--print", "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim(), "../react.gradle")

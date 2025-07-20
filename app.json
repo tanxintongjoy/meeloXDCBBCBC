@@ -1,0 +1,8 @@
+{
+  "android": {
+    "package": "com.anonymous.meeloxdcb"
+  },
+  "ios": {
+    "bundleIdentifier": "com.anonymous.meeloxdcb"
+  }
+}
